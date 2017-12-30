@@ -2,7 +2,7 @@ package xyz.cuteclouds.utils.args.lexer;
 
 public enum TokenType {
     /**
-     * Character <b>(<</b>
+     * Character <b>(</b>
      */
     LEFT_PAREN('('),
     /** Character <b>)</b> */

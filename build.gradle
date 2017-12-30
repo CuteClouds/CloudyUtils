@@ -55,6 +55,9 @@ javadoc {
     options.author()
     options.encoding = 'UTF-8'
     options.addStringOption('-html5')
+
+    exclude('xyz/cuteclouds/utils/StringUtilsImpl.java')
+    exclude('gnu/trove') //random impl
 }
 
 artifacts {

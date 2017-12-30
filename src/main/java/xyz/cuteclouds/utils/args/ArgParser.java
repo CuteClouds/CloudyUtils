@@ -18,7 +18,7 @@ import static xyz.cuteclouds.utils.args.lexer.TokenType.*;
  * <p>
  * <b>{@link Text}</b>: {@code smart text, "quoted example", 'single quotes', `markdown code-quote`, """raw quotes"""}
  * <br>Represents a piece of raw text.
- * <br>({@code \n, \r, \b, \t, \f} and {@code \u} surrogates are available for smart and simple quotes.)
+ * <br>({@code \n, \r, \b, \t, \f} and unicode surrogates are available for smart and simple quotes.)
  * <br>(if the text is quoted with multiple quotes, like {@code ""raw quote""} or {@code '''alternate'''}, text will not be escaped.)
  * <p>
  * <b>{@link Tuple}</b>: {@code { ... content ... }} and {@code ( ... content ... )} (smart tuples)
