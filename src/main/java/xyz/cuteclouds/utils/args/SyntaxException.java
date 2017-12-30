@@ -14,7 +14,9 @@
  *  limitations under the License.
  */
 
-package xyz.cuteclouds.utils.args.external;
+package xyz.cuteclouds.utils.args;
+
+import xyz.cuteclouds.utils.args.lexer.Position;
 
 public class SyntaxException extends RuntimeException {
     public SyntaxException(String msg) {

@@ -1,4 +1,6 @@
-package xyz.cuteclouds.utils.args.external;
+package xyz.cuteclouds.utils.args.lexer;
+
+import xyz.cuteclouds.utils.args.SyntaxException;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -295,8 +297,11 @@ public abstract class Lexer<T> {
     }
 
     protected boolean match(String prompt) {
+        if (prompt.isEmpty()) return true;
+
         ensureHistoryCapacity(prompt.length() + 1);
         int state = this.previous;
+
         for (char c : prompt.toCharArray()) {
             if (!match(c)) {
                 this.previous = state;

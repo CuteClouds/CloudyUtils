@@ -79,11 +79,11 @@ bintray {
     key = bintrayApiKey
     publications = ['BintrayRelease']
     pkg {
+        userOrg = 'cuteclouds'
         repo = 'maven'
         name = project.name
-        licenses = ['MIT']
-        vcsUrl = 'https://github.com/adriantodt/JVA.git'
-        publish = true
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/CuteClouds/CloudyUtils.git'
         version {
             name = project.version
         }

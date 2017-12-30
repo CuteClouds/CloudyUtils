@@ -16,12 +16,12 @@
 
 package xyz.cuteclouds.utils.args.lexer;
 
-import xyz.cuteclouds.utils.args.external.Lexer;
-import xyz.cuteclouds.utils.args.external.Position;
-import xyz.cuteclouds.utils.args.external.SyntaxException;
+import xyz.cuteclouds.utils.args.SyntaxException;
 
 import java.io.InputStream;
 import java.io.Reader;
+
+import static xyz.cuteclouds.utils.args.lexer.TokenType.*;
 
 public class ArgLexer extends Lexer<Token> {
 
@@ -44,7 +44,7 @@ public class ArgLexer extends Lexer<Token> {
     @Override
     protected void readTokens() {
         if (!hasNext()) {
-            tokens.add(make(TokenType.EOF));
+            tokens.add(make(EOF));
             return;
         }
 
@@ -55,35 +55,35 @@ public class ArgLexer extends Lexer<Token> {
         switch (c) {
 
             case '(': {
-                push(make(TokenType.LEFT_PAREN));
+                push(make(LEFT_PAREN));
                 return;
             }
             case ')': {
-                push(make(TokenType.RIGHT_PAREN));
+                push(make(RIGHT_PAREN));
                 return;
             }
 
-            case '[': {
-                push(make(TokenType.LEFT_BRACKET));
+            case '{': {
+                push(make(LEFT_BRACE));
                 return;
             }
-            case ']': {
-                push(make(TokenType.RIGHT_BRACKET));
+            case '}': {
+                push(make(RIGHT_BRACE));
                 return;
             }
 
             case ',': {
-                push(make(TokenType.COMMA));
+                push(make(COMMA));
                 return;
             }
             case ';': {
-                push(make(TokenType.SEMICOLON));
+                push(make(SEMICOLON));
                 return;
             }
 
             case ':':
             case '=': {
-                push(make(TokenType.ASSIGN));
+                push(make(ASSIGN));
                 return;
             }
 
@@ -108,7 +108,7 @@ public class ArgLexer extends Lexer<Token> {
                         case ASSIGN:
                             return;
                         default:
-                            push(make(TokenType.LINE));
+                            push(make(LINE));
                     }
                 }
                 return;
@@ -116,7 +116,7 @@ public class ArgLexer extends Lexer<Token> {
 
             case '\0':
             case (char) -1: {
-                push(make(TokenType.EOF));
+                push(make(EOF));
                 return;
             }
 
@@ -129,8 +129,8 @@ public class ArgLexer extends Lexer<Token> {
 
     @Override
     protected void afterReading() {
-        if (lastToken().getType() != TokenType.EOF) {
-            tokens.add(new Token(getPosition(), TokenType.EOF));
+        if (lastToken().getType() != EOF) {
+            tokens.add(new Token(getPosition(), EOF));
         }
     }
 
@@ -199,8 +199,8 @@ public class ArgLexer extends Lexer<Token> {
                 case ';':
                 case '(':
                 case ')':
-                case '[':
-                case ']':
+                case '{':
+                case '}':
                     break loop;
 
                 case '\\': {
@@ -213,7 +213,7 @@ public class ArgLexer extends Lexer<Token> {
         }
 
         back();
-        push(make(TokenType.TEXT, sb.toString().trim()));
+        push(make(TEXT, sb.toString().trim()));
     }
 
     private void readString(char initialQuote, boolean keepQuotes) {
@@ -222,6 +222,7 @@ public class ArgLexer extends Lexer<Token> {
         StringBuilder qb = new StringBuilder();
         while (match(initialQuote)) qb.append(initialQuote);
         String remainingQuote = qb.toString();
+        boolean rawQuotes = remainingQuote.isEmpty();
 
         StringBuilder sb = new StringBuilder();
 
@@ -229,12 +230,18 @@ public class ArgLexer extends Lexer<Token> {
             sb.append(initialQuote).append(remainingQuote);
         }
 
+        loop:
         while (true) {
             c = this.advance();
+
             switch (c) {
                 case '\\': {
-                    escapeNext(sb);
-                    break;
+                    if (!rawQuotes) {
+                        escapeNext(sb);
+                    } else {
+                        sb.append(c);
+                    }
+                    continue;
                 }
 
                 case 0: {
@@ -242,24 +249,30 @@ public class ArgLexer extends Lexer<Token> {
                         throw new SyntaxException("Unterminated string.");
                     }
 
-                    push(make(TokenType.TEXT, sb.toString()));
+                    break loop;
                 }
+
                 case '\r':
                 case '\n': {
-                    if (remainingQuote.isEmpty() || !keepQuotes) {
+                    if (rawQuotes) {
+                        if (sb.length() == 0) continue;
+                    } else if (!keepQuotes) {
                         throw new SyntaxException("Unterminated string.");
                     }
                 }
-                default:
-                    if (c == initialQuote && (remainingQuote.isEmpty() || match(remainingQuote))) {
+
+                default: {
+                    if (c == initialQuote && (rawQuotes || match(remainingQuote))) {
                         if (keepQuotes) {
                             sb.append(initialQuote).append(remainingQuote);
                         }
-                        push(make(TokenType.TEXT, sb.toString()));
-                        return;
+                        break loop;
                     }
                     sb.append(c);
+                }
             }
         }
+
+        push(make(TEXT, sb.toString()));
     }
 }

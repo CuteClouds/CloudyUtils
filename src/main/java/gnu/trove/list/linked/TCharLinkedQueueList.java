@@ -4,6 +4,9 @@ import gnu.trove.queue.TCharQueue;
 
 import java.util.NoSuchElementException;
 
+/**
+ * A resizable, double linked list of char primitives with queue capabilities.
+ */
 public class TCharLinkedQueueList extends TCharLinkedList implements TCharQueue {
     public TCharLinkedQueueList() {
         super();
@@ -13,6 +16,9 @@ public class TCharLinkedQueueList extends TCharLinkedList implements TCharQueue 
         super(no_entry_value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public char element() {
         final TCharLink f = head;
@@ -21,17 +27,26 @@ public class TCharLinkedQueueList extends TCharLinkedList implements TCharQueue 
         return f.value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean offer(char e) {
         return add(e);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public char peek() {
         final TCharLink f = head;
         return (f == null) ? no_entry_value : f.value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public char poll() {
         final TCharLink f = head;

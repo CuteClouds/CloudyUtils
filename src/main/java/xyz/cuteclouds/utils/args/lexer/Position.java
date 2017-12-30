@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package xyz.cuteclouds.utils.args.external;
+package xyz.cuteclouds.utils.args.lexer;
 
 import java.util.Objects;
 

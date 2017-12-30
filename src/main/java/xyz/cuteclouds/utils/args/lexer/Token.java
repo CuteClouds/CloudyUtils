@@ -16,8 +16,6 @@
 
 package xyz.cuteclouds.utils.args.lexer;
 
-import xyz.cuteclouds.utils.args.external.Position;
-
 public final class Token {
     private final Position position;
     private final TokenType type;
