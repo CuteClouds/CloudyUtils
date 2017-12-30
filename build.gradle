@@ -1,4 +1,3 @@
-
 plugins {
     id 'java'
     id 'maven'
@@ -18,4 +17,80 @@ repositories {
 dependencies {
     compile 'net.sf.trove4j:trove4j:3.0.3'
     compile 'org.jetbrains:annotations:13.0'
+}
+
+//Tasks
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4.1'
+}
+
+task clearSpecific(type: Delete) {
+    delete 'build/javadoc'
+}
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+jar {
+    baseName = project.name
+}
+
+shadowJar {
+    classifier = 'withDependencies'
+}
+
+javadoc {
+    dependsOn clearSpecific
+
+    failOnError = false
+    options.memberLevel = JavadocMemberLevel.PUBLIC
+    options.author()
+    options.encoding = 'UTF-8'
+    options.addStringOption('-html5')
+}
+
+artifacts {
+    archives shadowJar, javadocJar, sourcesJar
+}
+
+publishing {
+    publications {
+        BintrayRelease(MavenPublication) {
+            from components.java
+            groupId group
+            artifactId project.name
+            version project.version
+            artifact javadocJar
+            artifact sourcesJar
+        }
+    }
+}
+
+bintray {
+    user = bintrayUsername
+    key = bintrayApiKey
+    publications = ['BintrayRelease']
+    pkg {
+        repo = 'maven'
+        name = project.name
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/adriantodt/JVA.git'
+        publish = true
+        version {
+            name = project.version
+        }
+    }
+}
+
+bintrayUpload {
+    dependsOn build
+    dependsOn 'publishBintrayReleasePublicationToMavenLocal'
 }

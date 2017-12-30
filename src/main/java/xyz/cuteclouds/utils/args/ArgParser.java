@@ -3,14 +3,14 @@ package xyz.cuteclouds.utils.args;
 import org.intellij.lang.annotations.MagicConstant;
 import xyz.cuteclouds.utils.args.external.Position;
 import xyz.cuteclouds.utils.args.external.SyntaxException;
-import xyz.cuteclouds.utils.args.impl.ArgLexer;
-import xyz.cuteclouds.utils.args.impl.Token;
+import xyz.cuteclouds.utils.args.lexer.ArgLexer;
+import xyz.cuteclouds.utils.args.lexer.Token;
 import xyz.cuteclouds.utils.args.tuples.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static xyz.cuteclouds.utils.args.impl.TokenType.*;
+import static xyz.cuteclouds.utils.args.lexer.TokenType.*;
 
 public class ArgParser {
     private final boolean semicolons, smartTuples, implicitTuples, rawPairs;

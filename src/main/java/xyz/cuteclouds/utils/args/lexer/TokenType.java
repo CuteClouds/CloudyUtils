@@ -1,4 +1,4 @@
-package xyz.cuteclouds.utils.args.impl;
+package xyz.cuteclouds.utils.args.lexer;
 
 public enum TokenType {
     /** Character <b>(</b> */

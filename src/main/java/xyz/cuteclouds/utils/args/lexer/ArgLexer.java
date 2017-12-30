@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package xyz.cuteclouds.utils.args.impl;
+package xyz.cuteclouds.utils.args.lexer;
 
 import xyz.cuteclouds.utils.args.external.Lexer;
 import xyz.cuteclouds.utils.args.external.Position;
